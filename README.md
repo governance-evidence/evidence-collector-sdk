@@ -1,6 +1,7 @@
 # Evidence Collector SDK
 
 [![CI](https://github.com/governance-evidence/evidence-collector-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/governance-evidence/evidence-collector-sdk/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19245405.svg)](https://doi.org/10.5281/zenodo.19245405)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://github.com/governance-evidence/evidence-collector-sdk/blob/main/pyproject.toml)
 [![pre-commit enabled](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
@@ -142,6 +143,7 @@ This SDK is part of the [governance-evidence](https://github.com/governance-evid
 
 | Repository | Role | DOI |
 |------------|------|-----|
+| [evidence-collector-sdk](https://github.com/governance-evidence/evidence-collector-sdk) | Collects and structures governance-relevant evidence from raw signals | [10.5281/zenodo.19245405](https://doi.org/10.5281/zenodo.19245405) |
 | [decision-event-schema](https://github.com/governance-evidence/decision-event-schema) | Schema that this SDK outputs events in | [10.5281/zenodo.18923178](https://doi.org/10.5281/zenodo.18923178) |
 | [evidence-sufficiency-calc](https://github.com/governance-evidence/evidence-sufficiency-calc) | Scores the evidence events this SDK collects | Pending |
 | [governance-drift-toolkit](https://github.com/governance-evidence/governance-drift-toolkit) | Monitors drift using events from this SDK | Pending |

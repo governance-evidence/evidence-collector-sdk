@@ -3,6 +3,7 @@ message: "If you use this software, please cite it as below."
 type: software
 title: "Evidence Collector SDK"
 version: 0.1.0
+doi: 10.5281/zenodo.19245405
 license: Apache-2.0
 authors:
   - family-names: Solozobov
