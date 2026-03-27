@@ -1,0 +1,108 @@
+# Evidence Unit Model
+
+## Overview
+
+An evidence unit is a raw system signal enriched with contextualization,
+attribution, provenance, and temporal metadata. It is the atomic output
+of the evidence collection (Evidence Collector SDK) pipeline.
+
+## Evidence != Telemetry
+
+| Property | Telemetry | Evidence |
+|---|---|---|
+| Purpose | Operational monitoring | Governance assessment |
+| Context | Minimal | System state, org role, dependencies |
+| Attribution | Source label | Actor, delegation chain, responsibility |
+| Provenance | None | Full transformation chain with hashes |
+| Confidence | Implicit | Explicit score with known gaps |
+
+## Data Model
+
+### RawSignal
+
+Input to the pipeline. Five types: LOG, METRIC, EVENT, CONFIG_CHANGE, HUMAN_ACTION.
+Timestamps must be timezone-aware (naive datetimes rejected).
+
+### EvidenceUnit
+
+Output of the pipeline. Contains:
+
+- `unit_id` -- unique identifier
+- `signal` -- the original RawSignal
+- `provenance` -- ProvenanceChain with hash-linked steps
+- `attribution` -- actor identification and delegation chain
+- `confidence` -- quality score with explicit known gaps
+- `context_enrichment` -- system state, org context, dependencies
+- `temporal_grounding` -- collection vs event timestamp, processing lag
+
+### Decision Event Schema Serialization
+
+`to_decision_event(unit)` produces a dict conforming to the Decision Event Schema:
+
+- `schema_version` -- Decision Event Schema version (currently "0.1.0")
+- Required: `decision_id`, `timestamp`, `decision_type`
+- Payload fields (score, features) at top level for Governance Drift Toolkit compatibility
+- `decision_context` -- available inputs (including dependency relations)
+- `decision_logic` -- rule_version, thresholds, parameters (configurable via DecisionEventMappingConfig)
+- `decision_quality_indicators` -- confidence_score, signal_quality, collection_completeness, gaps
+- `temporal_metadata` -- timestamps + processing_lag_ms
+- `human_override_record` -- only for human actions (no null values for absent fields)
+- Extension fields: `_provenance`, `_attribution`, `_signal_metadata`
+
+### Signal Quality Configuration
+
+Quality heuristics are centralized in `SignalQualityDefaults`, configured per signal type:
+
+```python
+SignalQualityDefaults(
+    base_quality=1.0,          # quality when data is complete
+    missing_key_quality=0.7,   # quality when expected key absent
+    gap_penalty_per_gap=0.05,  # confidence penalty per known gap
+)
+```
+
+Access via `config.quality_for(signal_type)`.
+
+## Usage
+
+### High-level (recommended)
+
+```python
+from collector import EvidenceCollector, fraud_detection_config
+
+collector = EvidenceCollector(config=fraud_detection_config())
+collector.add(signal)
+events = collector.flush()  # Decision Event Schema dicts with provenance validation
+```
+
+### Low-level
+
+```python
+from collector import TransformPipeline, to_decision_event
+
+pipe = TransformPipeline(config)
+unit = pipe.transform(signal)
+event = to_decision_event(unit)
+```
+
+### Streaming
+
+For continuous collection with backpressure, see [streaming.md](streaming.md).
+
+```python
+from collector import EvidenceCollectorStream, fraud_detection_config
+
+stream = EvidenceCollectorStream(fraud_detection_config(), max_buffer_size=1000)
+stream.push(signal)
+events = stream.read_batch(batch_size=100)
+stream.close()
+```
+
+### Validation
+
+```python
+from collector import validate_complete
+
+errors = validate_complete(event, config=config)
+# checks Decision Event Schema schema, provenance integrity, and feature completeness
+```
