@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69,<80", "wheel"]
+requires = ["setuptools>=69,<83", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -43,8 +43,8 @@ dev = [
   "hypothesis>=6.90,<7",
   "mypy>=1.8,<2",
   "pre-commit>=3,<5",
-  "pytest>=7,<9",
-  "pytest-cov>=4,<6",
+  "pytest>=7,<10",
+  "pytest-cov>=4,<8",
   "pyyaml>=6,<7",
   "ruff>=0.4,<1"
 ]
