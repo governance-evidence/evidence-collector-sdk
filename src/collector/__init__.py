@@ -1,4 +1,4 @@
-"""Evidence Collector SDK (Evidence Collector SDK).
+"""Evidence Collector SDK.
 
 Public API re-exports for convenient access.
 """

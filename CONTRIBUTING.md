@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to the Evidence Collector SDK (Evidence Collector SDK).
+Thank you for your interest in contributing to the Evidence Collector SDK.
 
 ## Prerequisites
 

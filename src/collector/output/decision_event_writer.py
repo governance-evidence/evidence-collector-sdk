@@ -1,4 +1,4 @@
-"""Serialize evidence units to Decision Event Schema Decision Event Schema format.
+"""Serialize evidence units to Decision Event Schema format.
 
 The output dict is directly consumable by Governance Drift Toolkit's
 ``integrations/decision_event_schema.py`` (``extract_scores``,

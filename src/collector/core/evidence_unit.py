@@ -2,8 +2,7 @@
 
 An evidence unit is the structured output of the Evidence Collector SDK pipeline:
 a raw signal enriched with contextualization, attribution, provenance,
-confidence, and temporal grounding. It conforms to Decision Event Schema Decision Event
-Schema when serialized.
+confidence, and temporal grounding. It conforms to the Decision Event Schema when serialized.
 """
 
 from __future__ import annotations
