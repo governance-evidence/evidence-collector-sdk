@@ -4,6 +4,7 @@ from collector.config import DecisionEventMappingConfig, fraud_detection_config
 from collector.core.signal import RawSignal, SignalType
 from collector.output.decision_event_writer import SCHEMA_VERSION, to_decision_event
 from collector.transforms.action_to_evidence import transform_action
+from collector.transforms.base import build_evidence_unit
 from collector.transforms.config_to_evidence import transform_config
 from collector.transforms.event_to_evidence import transform_event
 
@@ -95,6 +96,69 @@ class TestToDecisionEvent:
         assert logic["thresholds"]["old_threshold"] == 0.65
         assert logic["parameters"]["model_version"] == "fraud-v3"
 
+    def test_decision_logic_for_hybrid_actor(self):
+        sig = RawSignal(
+            signal_id="hyb-001",
+            signal_type=SignalType.EVENT,
+            payload={"decision": "review"},
+            source="copilot-reviewer",
+            timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        unit = build_evidence_unit(
+            sig,
+            config=fraud_detection_config(),
+            transform_name="test",
+            actor_type="hybrid",
+        )
+        event = to_decision_event(unit)
+        assert event["decision_type"] == "hybrid"
+        assert event["decision_logic"]["logic_type"] == "hybrid"
+
+    def test_decision_logic_for_metric_signal(self):
+        sig = RawSignal(
+            signal_id="met-001",
+            signal_type=SignalType.METRIC,
+            payload={"score": 0.42, "latency_ms": 123},
+            source="latency-monitor",
+            timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        unit = build_evidence_unit(
+            sig,
+            config=fraud_detection_config(),
+            transform_name="test",
+        )
+        event = to_decision_event(unit)
+        assert event["decision_type"] == "automated"
+        assert event["decision_logic"]["logic_type"] == "rule_based"
+        assert event["decision_logic"]["output"] == 0.42
+
+    def test_decision_logic_for_threshold_only_event(self):
+        sig = RawSignal(
+            signal_id="evt-threshold-001",
+            signal_type=SignalType.EVENT,
+            payload={"decision": "allow", "custom_thresh": 0.8},
+            source="policy-engine",
+            timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        mapping = DecisionEventMappingConfig(logic_threshold_keys=("custom_thresh",))
+        unit = transform_event(sig, config=fraud_detection_config())
+        event = to_decision_event(unit, mapping=mapping)
+        assert event["decision_logic"]["logic_type"] == "rule_based"
+        assert event["decision_logic"]["thresholds"]["custom_thresh"] == 0.8
+
+    def test_decision_logic_defaults_to_rule_based_without_ml_or_threshold_keys(self):
+        sig = RawSignal(
+            signal_id="evt-rule-default-001",
+            signal_type=SignalType.EVENT,
+            payload={"decision": "allow"},
+            source="policy-engine",
+            timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        unit = transform_event(sig, config=fraud_detection_config())
+        event = to_decision_event(unit)
+        assert event["decision_logic"]["logic_type"] == "rule_based"
+        assert event["decision_logic"]["output"] == "allow"
+
     def test_custom_mapping_config(self):
         sig = RawSignal(
             signal_id="cfg-001",
@@ -129,6 +193,32 @@ class TestToDecisionEvent:
         assert "processing_duration_ms" in tm
         assert "hash_chain" in tm
         assert tm["evidence_tier"] == "lightweight"
+
+    def test_temporal_metadata_coerces_boolean_sequence_number(self):
+        sig = RawSignal(
+            signal_id="sig-seq-bool",
+            signal_type=SignalType.EVENT,
+            payload={"score": 0.9},
+            source="test",
+            timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+            metadata={"sequence_number": True},
+        )
+        unit = transform_event(sig, config=fraud_detection_config())
+        event = to_decision_event(unit)
+        assert event["temporal_metadata"]["sequence_number"] == 0
+
+    def test_temporal_metadata_preserves_non_negative_sequence_number(self):
+        sig = RawSignal(
+            signal_id="sig-seq-int",
+            signal_type=SignalType.EVENT,
+            payload={"score": 0.9},
+            source="test",
+            timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+            metadata={"sequence_number": 7},
+        )
+        unit = transform_event(sig, config=fraud_detection_config())
+        event = to_decision_event(unit)
+        assert event["temporal_metadata"]["sequence_number"] == 7
 
     def test_provenance_extension(self):
         prov = to_decision_event(self._make_unit())["_provenance"]

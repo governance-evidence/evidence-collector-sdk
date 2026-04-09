@@ -29,7 +29,39 @@ jobs:
       - name: Check headers
         run: python scripts/check_headers.py
 
-  test:
+  test-pr:
+    if: github.event_name == 'pull_request'
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=collector \
+                 --cov-report=term-missing \
+                 --cov-report=xml:coverage.xml \
+                 --cov-fail-under=100 \
+                 -q --no-header --tb=short
+      - name: Upload coverage artifact
+        if: matrix.python-version == '3.11'
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+  test-push:
+    if: github.event_name == 'push'
     name: Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 10
