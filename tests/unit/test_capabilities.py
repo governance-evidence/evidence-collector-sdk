@@ -8,7 +8,7 @@ class TestStreamCapabilities:
     def test_create(self):
         cap = StreamCapabilities(
             supported_signal_types=frozenset({SignalType.EVENT}),
-            schema_version="0.1.0",
+            schema_version="0.3.0",
             max_batch_size=500,
         )
         assert SignalType.EVENT in cap.supported_signal_types

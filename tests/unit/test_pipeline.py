@@ -78,6 +78,8 @@ class TestTransformPipeline:
         event = pipe.process_to_decision_event([signal])[0]
 
         assert event["decision_logic"] == {
+            "logic_type": "ml_inference",
+            "output": 0.9,
             "thresholds": {"custom_threshold": 0.42},
             "parameters": {"custom_param": "model-x"},
         }

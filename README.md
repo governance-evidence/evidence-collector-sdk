@@ -126,7 +126,7 @@ errors = validate_complete(event, config=fraud_detection_config())
 
 ```python
 caps = collector.capabilities
-# StreamCapabilities(supported_signal_types=..., schema_version='0.1.0', ...)
+# StreamCapabilities(supported_signal_types=..., schema_version='0.3.0', ...)
 ```
 
 ## Development

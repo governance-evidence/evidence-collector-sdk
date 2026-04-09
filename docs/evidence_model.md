@@ -39,14 +39,15 @@ Output of the pipeline. Contains:
 
 `to_decision_event(unit)` produces a dict conforming to the Decision Event Schema:
 
-- `schema_version` -- Decision Event Schema version (currently "0.1.0")
-- Required: `decision_id`, `timestamp`, `decision_type`
+- `schema_version` -- Decision Event Schema version (currently "0.3.0")
+- Required canonical blocks: `decision_context`, `decision_logic`, `human_override_record`, `temporal_metadata`
+- Legacy aliases retained for compatibility: `decision_id`, `timestamp`, `decision_type`
 - Payload fields (score, features) at top level for Governance Drift Toolkit compatibility
-- `decision_context` -- available inputs (including dependency relations)
-- `decision_logic` -- rule_version, thresholds, parameters (configurable via DecisionEventMappingConfig)
+- `decision_context` -- includes canonical `decision_id` and domain `decision_type`, plus available inputs
+- `decision_logic` -- includes canonical `logic_type` and `output`, plus rule_version/thresholds/parameters
 - `decision_quality_indicators` -- confidence_score, signal_quality, collection_completeness, gaps
-- `temporal_metadata` -- timestamps + processing_lag_ms
-- `human_override_record` -- only for human actions (no null values for absent fields)
+- `temporal_metadata` -- canonical event timestamp, hash chain, evidence tier, plus compatibility aliases
+- `human_override_record` -- always present; human decisions include actor/rationale attribution
 - Extension fields: `_provenance`, `_attribution`, `_signal_metadata`
 
 ### Signal Quality Configuration

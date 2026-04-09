@@ -114,7 +114,7 @@ class TestEvidenceCollector:
         col = EvidenceCollector(config=fraud_detection_config())
         caps = col.capabilities
         assert SignalType.EVENT in caps.supported_signal_types
-        assert caps.schema_version == "0.1.0"
+        assert caps.schema_version == "0.3.0"
 
     def test_config_property(self):
         cfg = fraud_detection_config()

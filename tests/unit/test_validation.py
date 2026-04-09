@@ -51,13 +51,13 @@ class TestValidateDecisionEvent:
 
     def test_missing_required_field(self):
         event = _make_event()
-        del event["decision_id"]
+        del event["decision_context"]["decision_id"]
         errors = validate_decision_event(event)
         assert any("decision_id" in e for e in errors)
 
     def test_wrong_type(self):
         event = _make_event()
-        event["decision_id"] = 123
+        event["decision_context"]["decision_id"] = 123
         errors = validate_decision_event(event)
         assert len(errors) > 0
 

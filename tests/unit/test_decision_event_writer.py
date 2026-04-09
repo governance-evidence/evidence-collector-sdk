@@ -24,6 +24,10 @@ class TestToDecisionEvent:
         assert "decision_id" in event
         assert "timestamp" in event
         assert "decision_type" in event
+        assert event["decision_context"]["decision_id"] == event["decision_id"]
+        assert "logic_type" in event["decision_logic"]
+        assert "event_timestamp" in event["temporal_metadata"]
+        assert "override_occurred" in event["human_override_record"]
 
     def test_schema_version(self):
         event = to_decision_event(self._make_unit())
@@ -43,6 +47,7 @@ class TestToDecisionEvent:
         ctx = event["decision_context"]
         assert "available_inputs" in ctx
         assert "signal_type" in ctx
+        assert ctx["decision_type"] == "event"
 
     def test_available_inputs_includes_deps(self):
         from collector.transforms.base import build_evidence_unit
@@ -67,7 +72,8 @@ class TestToDecisionEvent:
 
     def test_decision_logic_empty_for_event(self):
         event = to_decision_event(self._make_unit())
-        assert event["decision_logic"] == {}
+        assert event["decision_logic"]["logic_type"] == "ml_inference"
+        assert event["decision_logic"]["output"] == 0.87
 
     def test_decision_logic_for_config_change(self):
         sig = RawSignal(
@@ -117,9 +123,12 @@ class TestToDecisionEvent:
     def test_temporal_metadata_includes_lag(self):
         event = to_decision_event(self._make_unit())
         tm = event["temporal_metadata"]
+        assert "event_timestamp" in tm
         assert "decision_timestamp" in tm
         assert "evidence_availability_timestamp" in tm
-        assert "processing_lag_ms" in tm
+        assert "processing_duration_ms" in tm
+        assert "hash_chain" in tm
+        assert tm["evidence_tier"] == "lightweight"
 
     def test_provenance_extension(self):
         prov = to_decision_event(self._make_unit())["_provenance"]
@@ -137,7 +146,7 @@ class TestToDecisionEvent:
 
     def test_no_human_override_for_system(self):
         event = to_decision_event(self._make_unit())
-        assert "human_override_record" not in event
+        assert event["human_override_record"] == {"override_occurred": False}
 
     def test_human_override_for_action(self):
         sig = RawSignal(
@@ -150,9 +159,11 @@ class TestToDecisionEvent:
         unit = transform_action(sig, config=fraud_detection_config())
         event = to_decision_event(unit)
         assert event["decision_type"] == "human"
+        assert event["decision_logic"]["logic_type"] == "human_decision"
         override = event["human_override_record"]
         assert override["override_decision"] is True
         assert override["basis_for_deviation"] == "confirmed fraud"
+        assert override["override_rationale"] == "confirmed fraud"
 
     def test_human_override_no_none_values(self):
         sig = RawSignal(
@@ -167,6 +178,7 @@ class TestToDecisionEvent:
         override = event["human_override_record"]
         assert "override_decision" not in override
         assert override["basis_for_deviation"] == "test"
+        assert override["override_rationale"] == "test"
 
     def test_metadata_included_by_default(self):
         sig = RawSignal(
@@ -213,6 +225,7 @@ class TestToDecisionEvent:
         assert "override_decision" not in override
         assert "basis_for_deviation" not in override
         assert "independence_assessment" not in override
+        assert override["override_rationale"] == "No rationale recorded."
 
     def test_human_override_with_independence(self):
         sig = RawSignal(

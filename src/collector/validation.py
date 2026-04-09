@@ -66,7 +66,7 @@ def validate_decision_event(
 
 
 def _validate_timestamp_format(event: dict[str, Any]) -> list[str]:
-    """Validate the top-level Decision Event Schema timestamp string.
+    """Validate the legacy top-level timestamp alias when present.
 
     Parameters
     ----------
@@ -192,14 +192,59 @@ def validate_complete(
 _MINIMAL_SCHEMA: dict[str, Any] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "required": ["decision_id", "timestamp", "decision_type"],
+    "required": [
+        "schema_version",
+        "decision_context",
+        "decision_logic",
+        "human_override_record",
+        "temporal_metadata",
+    ],
     "properties": {
-        "schema_version": {"type": "string"},
+        "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
         "decision_id": {"type": "string"},
         "timestamp": {"type": "string", "format": "date-time"},
         "decision_type": {
             "type": "string",
             "enum": ["human", "automated", "hybrid"],
+        },
+        "decision_context": {
+            "type": "object",
+            "required": ["decision_id", "decision_type"],
+            "properties": {
+                "decision_id": {"type": "string"},
+                "decision_type": {"type": "string"},
+            },
+        },
+        "decision_logic": {
+            "type": "object",
+            "required": ["logic_type", "output"],
+            "properties": {
+                "logic_type": {"type": "string"},
+            },
+        },
+        "human_override_record": {
+            "type": "object",
+            "required": ["override_occurred"],
+            "properties": {
+                "override_occurred": {"type": "boolean"},
+            },
+        },
+        "temporal_metadata": {
+            "type": "object",
+            "required": ["event_timestamp", "sequence_number", "hash_chain", "evidence_tier"],
+            "properties": {
+                "event_timestamp": {"type": "string", "format": "date-time"},
+                "sequence_number": {"type": "integer", "minimum": 0},
+                "hash_chain": {
+                    "type": "object",
+                    "required": ["current_hash", "algorithm"],
+                    "properties": {
+                        "current_hash": {"type": "string"},
+                        "algorithm": {"type": "string"},
+                    },
+                },
+                "evidence_tier": {"type": "string"},
+            },
         },
     },
 }
