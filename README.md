@@ -1,7 +1,8 @@
 # Evidence Collector SDK
 
 [![CI](https://github.com/governance-evidence/evidence-collector-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/governance-evidence/evidence-collector-sdk/actions/workflows/ci.yml)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19245405.svg)](https://doi.org/10.5281/zenodo.19245405)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19245404.svg)](https://doi.org/10.5281/zenodo.19245404)
+[![arXiv](https://img.shields.io/badge/arXiv-2604.17836-b31b1b.svg)](https://arxiv.org/abs/2604.17836)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://github.com/governance-evidence/evidence-collector-sdk/blob/main/pyproject.toml)
 [![pre-commit enabled](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
@@ -10,6 +11,18 @@ Collect, contextualize, and structure raw system signals into governance-relevan
 evidence units. Transforms operational telemetry into
 [Decision Event Schema](https://github.com/governance-evidence/decision-event-schema)
 events enriched with provenance, attribution, and temporal metadata.
+
+## Academic Context
+
+This SDK is a primary artifact of:
+
+> Solozobov, O. (2026). *Label-Free Detection of Governance Evidence Degradation in Risk Decision Systems*.
+> arXiv:2604.17836. <https://arxiv.org/abs/2604.17836>
+
+The SDK provides the evidence-stream ingestion layer that feeds label-free governance monitoring
+(see [governance-drift-toolkit](https://github.com/governance-evidence/governance-drift-toolkit)).
+It operationalizes the evidence collection stage of the governance evidence chain introduced
+across the paper series.
 
 ## Install
 
@@ -143,10 +156,49 @@ This SDK is part of the [governance-evidence](https://github.com/governance-evid
 
 | Repository | Role | DOI |
 |------------|------|-----|
-| [evidence-collector-sdk](https://github.com/governance-evidence/evidence-collector-sdk) | Collects and structures governance-relevant evidence from raw signals | [10.5281/zenodo.19245405](https://doi.org/10.5281/zenodo.19245405) |
-| [decision-event-schema](https://github.com/governance-evidence/decision-event-schema) | Schema that this SDK outputs events in | [10.5281/zenodo.18923178](https://doi.org/10.5281/zenodo.18923178) |
-| [evidence-sufficiency-calc](https://github.com/governance-evidence/evidence-sufficiency-calc) | Scores the evidence events this SDK collects | Pending |
-| [governance-drift-toolkit](https://github.com/governance-evidence/governance-drift-toolkit) | Monitors drift using events from this SDK | Pending |
+| [decision-event-schema](https://github.com/governance-evidence/decision-event-schema) | Schema that this SDK outputs events in | [10.5281/zenodo.18923177](https://doi.org/10.5281/zenodo.18923177) |
+| [evidence-sufficiency-calc](https://github.com/governance-evidence/evidence-sufficiency-calc) | Scores the evidence events this SDK collects | [10.5281/zenodo.19233930](https://doi.org/10.5281/zenodo.19233930) |
+| [governance-drift-toolkit](https://github.com/governance-evidence/governance-drift-toolkit) | Monitors drift using events from this SDK | [10.5281/zenodo.19236417](https://doi.org/10.5281/zenodo.19236417) |
+| [governance-benchmark-dataset](https://github.com/governance-evidence/governance-benchmark-dataset) | Cross-architecture benchmark that scores event streams from this SDK | [10.5281/zenodo.19248722](https://doi.org/10.5281/zenodo.19248722) |
+
+All DOIs above are **concept DOIs** -- each resolves to the latest Zenodo release of that artifact.
+
+## Citation
+
+If you use this SDK in your research, please cite both the paper and the software artifact.
+
+**Paper (primary):**
+
+```bibtex
+@misc{solozobov2026labelfree,
+  author = {Solozobov, Oleg},
+  title  = {Label-Free Detection of Governance Evidence Degradation in Risk Decision Systems},
+  year   = {2026},
+  eprint = {2604.17836},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CY},
+  doi    = {10.48550/arXiv.2604.17836},
+  url    = {https://arxiv.org/abs/2604.17836}
+}
+```
+
+**Software (this repository):**
+
+```bibtex
+@software{solozobov2026evidencecollectorsdk,
+  author  = {Solozobov, Oleg},
+  title   = {Evidence Collector SDK},
+  version = {0.2.0},
+  year    = {2026},
+  url     = {https://github.com/governance-evidence/evidence-collector-sdk},
+  doi     = {10.5281/zenodo.19245404}
+}
+```
+
+The software `doi` above is the **concept DOI** (always resolves to the latest Zenodo release).
+The current v0.2.0 version DOI is [10.5281/zenodo.19478276](https://doi.org/10.5281/zenodo.19478276).
+
+See [CITATION.cff](CITATION.cff) for machine-readable citation metadata.
 
 ## License
 

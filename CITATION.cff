@@ -2,13 +2,23 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "Evidence Collector SDK"
-version: 0.1.0
-doi: 10.5281/zenodo.19245405
+version: 0.2.0
+date-released: "2026-04-09"
 license: Apache-2.0
 authors:
   - family-names: Solozobov
     given-names: Oleg
+    orcid: "https://orcid.org/0009-0009-0105-7459"
+doi: "10.5281/zenodo.19478276"  # v0.2.0 version DOI
 repository-code: "https://github.com/governance-evidence/evidence-collector-sdk"
+url: "https://github.com/governance-evidence/evidence-collector-sdk"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.19245404"
+    description: "Concept DOI (always resolves to latest Zenodo release)"
+  - type: other
+    value: "arXiv:2604.17836"
+    description: "Preprint: Label-Free Detection of Governance Evidence Degradation in Risk Decision Systems"
 abstract: >-
   A Python SDK for collecting, contextualizing, and structuring raw system
   signals into governance-relevant evidence units. Transforms operational
