@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.1] - 2026-06-13
 
+Zenodo release: [10.5281/zenodo.20673681](https://doi.org/10.5281/zenodo.20673681).
+
 ### Fixed
 
 - `StreamCapabilities.sdk_version` is now derived from the installed package

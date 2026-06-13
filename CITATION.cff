@@ -9,7 +9,7 @@ authors:
   - family-names: Solozobov
     given-names: Oleg
     orcid: "https://orcid.org/0009-0009-0105-7459"
-doi: "10.5281/zenodo.19478276"  # v0.2.0 version DOI
+doi: "10.5281/zenodo.20673681"  # v0.2.1 version DOI
 repository-code: "https://github.com/governance-evidence/evidence-collector-sdk"
 url: "https://github.com/governance-evidence/evidence-collector-sdk"
 identifiers:
