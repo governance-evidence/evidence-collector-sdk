@@ -1,3 +1,5 @@
+from importlib.metadata import version as metadata_version
+
 from collector.capabilities import StreamCapabilities, capabilities_from_config
 from collector.config import fraud_detection_config
 from collector.core.signal import SignalType
@@ -13,7 +15,7 @@ class TestStreamCapabilities:
         )
         assert SignalType.EVENT in cap.supported_signal_types
         assert cap.max_batch_size == 500
-        assert cap.sdk_version == "0.1.0"
+        assert cap.sdk_version == metadata_version("evidence-collector-sdk")
 
 
 class TestCapabilitiesFromConfig:

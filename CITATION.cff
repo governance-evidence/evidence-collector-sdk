@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "Evidence Collector SDK"
-version: 0.2.0
-date-released: "2026-04-09"
+version: 0.2.1
+date-released: "2026-06-13"
 license: Apache-2.0
 authors:
   - family-names: Solozobov

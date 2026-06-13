@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.2.1] - 2026-06-13
+
+### Fixed
+
+- `StreamCapabilities.sdk_version` is now derived from the installed package
+  metadata instead of a hardcoded string (it had stayed at 0.1.0 after the
+  v0.2.0 release); the capabilities test now compares against the metadata,
+  so the value can no longer drift.
+
 ## [0.2.0] - 2026-04-09
 
 Zenodo release: [10.5281/zenodo.19478276](https://doi.org/10.5281/zenodo.19478276).

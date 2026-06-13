@@ -6,7 +6,8 @@ before consuming its evidence stream.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from importlib.metadata import version as metadata_version
 from typing import TYPE_CHECKING
 
 from collector.output.decision_event_writer import SCHEMA_VERSION
@@ -35,7 +36,7 @@ class StreamCapabilities:
     supported_signal_types: frozenset[SignalType]
     schema_version: str
     max_batch_size: int
-    sdk_version: str = "0.1.0"
+    sdk_version: str = field(default_factory=lambda: metadata_version("evidence-collector-sdk"))
 
 
 def capabilities_from_config(
